@@ -222,7 +222,6 @@ $(".submit").on("click", function(event) {
     .then(function(data) {
           $.get("/api/friends",function(data){
             console.log(data); 
-            $(".modal-body").html(data.name + data.photo);
             $('#myModal').modal("show");
           })
         });
