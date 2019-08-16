@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <title>Survey</title>
 </head>
 <body>
@@ -28,7 +29,7 @@
         </form>
         <br>
         <hr>
-        <form method="POST" role="form">
+        <form>
             <br>
             <div>
                 <h3>Question 1</h3>
@@ -163,48 +164,38 @@
             <button type="submit" class="btn btn-primary col-md-3 submit">Submit</button>
             </form>
             <br>
-
-            <div class="modal" id="myModal" >
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">Your best match is found!</h5>
-                    </div>
-                    <div class="modal-body">
-                    </div>
-
             <footer class="footer">
                 <p><a href="/api/friends">API Friends List</a> | <a href="https://github.com/ZoeDj/FriendFinder">GitHub Repo</a></p>
-            </footer>
-            
+            </footer>   
     </div>
-   
+    <div class="modal fade" id="best-match-modal" >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Your best match is found!</h4>
+            </div>
+            <div class="modal-body">
+                <!-- <h2 id="match-name"></h2>
+                <img id="match-photo" src=" " alt="friend's photo"> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
 <script type="text/javascript">
 
-function runFriendsQuery(){
-    var currentURL = window.location.origin;
-
-    $.ajax({url: currentURL + "api/frinds", method: "GET"})
-    .done(function(friendsList){
-        console.log("-----------------------");
-        console.log("URL: " + currentURL +" api/friends");
-        console.log("-----------------------");
-        console.log(friendsList);
-        console.log("-----------------------");
-    })
-}
-runFriendsQuery();
-
 $(".submit").on("click", function(event) {
-        event.preventDefault();
-        
-        var name = $("#name").val().trim();
-        var photo = $("#photo").val().trim();
-        var answers= [$(".question1").val(), $(".question2").val(), $(".question3").val(),
-        $(".question4").val(), $(".question5").val(), $(".question6").val(),
-        $(".question7").val(), $(".question8").val(), $(".question9").val(), $(".question10").val(), ];
-     
+    event.preventDefault();
     
+    var name = $("#name").val().trim();
+    var photo = $("#photo").val().trim();
+    var answers= [$(".question1").val(), $(".question2").val(), $(".question3").val(),
+    $(".question4").val(), $(".question5").val(), $(".question6").val(),
+    $(".question7").val(), $(".question8").val(), $(".question9").val(), $(".question10").val(), ];
+     
 
     if (!name || !photo || answers.length!== 10) {
         alert("Please answer all of the questions")
@@ -216,25 +207,26 @@ $(".submit").on("click", function(event) {
           answers: answers
         }
     }
-    console.log(newFriend);
+
+    var currentURL = window.location.origin;
 
     $.post("/api/friends", newFriend)
     .then(function(data) {
-          $.get("/api/friends",function(data){
-            console.log(data); 
-            $('#myModal').modal("show");
-          })
-        });
-
+        console.log(data)
+        //   $.get(currentURL + "/api/friends", function(data){
+              console.log(data);
+            $('.modal-body').html('<h2>' + data.name + '</h2>' + '<img src="' + data.photo + ' max-width=50vw ">');
+        // Run modal
+        $('#best-match-modal').modal("toggle");
+        // })
+    });
 
     $("#name").val("");
     $("#photo").val("");
     [$(".question1").val(""), $(".question2").val(""), $(".question3").val(""),
-        $(".question4").val(""), $(".question5").val(""), $(".question6").val(""),
-        $(".question7").val(""), $(".question8").val(""), $(".question9").val(""), $(".question10").val(""), ];
-
-    });
-
+    $(".question4").val(""), $(".question5").val(""), $(".question6").val(""),
+    $(".question7").val(""), $(".question8").val(""), $(".question9").val(""), $(".question10").val(""), ];
+});
 
 </script>
 </body>

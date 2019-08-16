@@ -1,16 +1,18 @@
 var bodyParser = require('body-parser');
 var express = require('express');
 var path = require('path');
+var friendsList = require("./app/data/friends")
 
 var app = express();
 var PORT = process.env.PORT || 8080; 
 
-
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+// parse application
+app.use(bodyParser.urlencoded({ extended: true }));
  
 // parse application/json
 app.use(bodyParser.json());
+// app.use(bodyParser.raw());
+// app.use(bodyParser.text());
 
 require('./app/routing/apiRoutes.js')(app);
 require('./app/routing/htmlRoutes.js')(app);
